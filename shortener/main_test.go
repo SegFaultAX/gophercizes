@@ -11,7 +11,7 @@ var sampleRedirects = map[string]string{
 }
 
 func TestBasicRedirectFailure(t *testing.T) {
-	h := MapHandler(sampleRedirects, notFoundHandler)
+	h := LookupHandler(LookupMap(sampleRedirects), notFoundHandler)
 	req := httptest.NewRequest(http.MethodGet, "http://test.com/foo", nil)
 	w := httptest.NewRecorder()
 	h(w, req)
@@ -22,7 +22,7 @@ func TestBasicRedirectFailure(t *testing.T) {
 }
 
 func TestBasicRedirectSuccess(t *testing.T) {
-	h := MapHandler(sampleRedirects, notFoundHandler)
+	h := LookupHandler(LookupMap(sampleRedirects), notFoundHandler)
 	req := httptest.NewRequest(http.MethodGet, "http://test.com/test", nil)
 	w := httptest.NewRecorder()
 	h(w, req)
@@ -41,7 +41,7 @@ func TestFallback(t *testing.T) {
 	fb := func(w http.ResponseWriter, r *http.Request) {
 		called++
 	}
-	h := MapHandler(map[string]string{}, fb)
+	h := LookupHandler(LookupMap(map[string]string{}), fb)
 	req := httptest.NewRequest(http.MethodGet, "http://test.com/test", nil)
 	w := httptest.NewRecorder()
 	h(w, req)
