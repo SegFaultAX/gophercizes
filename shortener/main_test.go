@@ -12,7 +12,7 @@ var sampleRedirects = map[string]string{
 
 func TestBasicRedirectFailure(t *testing.T) {
 	h := MapHandler(sampleRedirects, notFoundHandler)
-	req := httptest.NewRequest("GET", "http://test.com/foo", nil)
+	req := httptest.NewRequest(http.MethodGet, "http://test.com/foo", nil)
 	w := httptest.NewRecorder()
 	h(w, req)
 
@@ -23,7 +23,7 @@ func TestBasicRedirectFailure(t *testing.T) {
 
 func TestBasicRedirectSuccess(t *testing.T) {
 	h := MapHandler(sampleRedirects, notFoundHandler)
-	req := httptest.NewRequest("GET", "http://test.com/test", nil)
+	req := httptest.NewRequest(http.MethodGet, "http://test.com/test", nil)
 	w := httptest.NewRecorder()
 	h(w, req)
 
@@ -42,7 +42,7 @@ func TestFallback(t *testing.T) {
 		called++
 	}
 	h := MapHandler(map[string]string{}, fb)
-	req := httptest.NewRequest("GET", "http://test.com/test", nil)
+	req := httptest.NewRequest(http.MethodGet, "http://test.com/test", nil)
 	w := httptest.NewRecorder()
 	h(w, req)
 

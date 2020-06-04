@@ -1,0 +1,7 @@
+---
+
+- path: /hello
+  redirect: http://example.com
+
+- path: /goodbye
+  redirect: https://github.com
