@@ -110,6 +110,7 @@ func YAMLHandler(cfg string, fallback http.HandlerFunc) (http.HandlerFunc, error
 	if err != nil {
 		return nil, err
 	}
+	defer f.Close()
 
 	var rdrs Redirects
 	err = yaml.NewDecoder(f).Decode(&rdrs)
