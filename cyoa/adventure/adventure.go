@@ -49,7 +49,7 @@ func LoadAdventure(path string) (Adventure, error) {
 	return adv, nil
 }
 
-func (g *Game) Play() {
+func (g *Game) PlayCli() {
 	playing := true
 	for playing {
 		arc, ok := g.Adventure[g.CurrentArc]

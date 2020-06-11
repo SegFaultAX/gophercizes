@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/segfaultax/gophercizes/adventure"
+	"github.com/segfaultax/gophercizes/cyoa/adventure"
 )
 
 func main() {
@@ -24,12 +24,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	// game := &Game{
+	// game := &adv.Game{
 	// 	Adventure:  adv,
 	// 	CurrentArc: "intro",
 	// }
 
-	// game.Play()
+	// game.handleInput()
+
+	// game.PlayCli()
 
 	game := &adventure.WebGame{
 		Adventure:  adv,
