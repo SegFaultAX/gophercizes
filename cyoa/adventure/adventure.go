@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
 )
 
 type (
@@ -93,25 +95,18 @@ func (g *Game) handleInput() bool {
 	}
 }
 
-func (g *WebGame) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	p := r.URL.Path
-	var title string
-	if p == "/" {
-		title = g.Adventure[g.DefaultArc].Title
-	} else {
-		title = g.Adventure[p[1:]].Title
+func (g *WebGame) HandleDefaultArc() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return c.Render(http.StatusOK, "story.html", g.Adventure[g.DefaultArc])
 	}
+}
 
-	w.Header().Add("Content-Type", "text/html")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf(`
-	<html>
-	  <head>
-	    <title>Hello, world!</title>
-	  </head>
-	  <body>
-	  %s, %s
-	  </body>
-	</html>
-	`, title, p)))
+func (g *WebGame) HandleArc() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		arc := c.Param("arc")
+		if _, ok := g.Adventure[arc]; !ok {
+			return echo.ErrNotFound
+		}
+		return c.Render(http.StatusOK, "story.html", g.Adventure[arc])
+	}
 }
