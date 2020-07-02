@@ -1,4 +1,4 @@
-package main
+package walk
 
 import (
 	"strings"
@@ -9,7 +9,7 @@ import (
 )
 
 func TestExtractText(t *testing.T) {
-	if s := extractText(nil); s != "" {
+	if s := ExtractText(nil); s != "" {
 		t.Error("expected emptry string, got: ", s)
 	}
 
@@ -17,7 +17,7 @@ func TestExtractText(t *testing.T) {
 		Type: html.TextNode,
 		Data: "test",
 	}
-	if s := extractText(node); s != "test" {
+	if s := ExtractText(node); s != "test" {
 		t.Error("expected 'test', got: ", s)
 	}
 
@@ -34,13 +34,13 @@ func TestExtractText(t *testing.T) {
 		},
 	}
 
-	if s := extractText(nested); s != "nested" {
+	if s := ExtractText(nested); s != "nested" {
 		t.Error("expected 'nested', got: ", s)
 	}
 }
 
 func TestExtractHRef(t *testing.T) {
-	if h := extractHRef(nil); h != "" {
+	if h := ExtractHRef(nil); h != "" {
 		t.Error("expected '', got: ", h)
 	}
 
@@ -48,7 +48,7 @@ func TestExtractHRef(t *testing.T) {
 		Type: html.ElementNode,
 		Data: "a",
 	}
-	if h := extractHRef(missing); h != "" {
+	if h := ExtractHRef(missing); h != "" {
 		t.Error("expected '', got: ", h)
 	}
 
@@ -62,13 +62,13 @@ func TestExtractHRef(t *testing.T) {
 			},
 		},
 	}
-	if h := extractHRef(node); h != "/1234" {
+	if h := ExtractHRef(node); h != "/1234" {
 		t.Error("expected '/1234', got: ", h)
 	}
 }
 
 func TestExtractAnchors(t *testing.T) {
-	if ls := extractAll(nil); len(ls) > 0 {
+	if ls := ExtractSync(nil); len(ls) > 0 {
 		t.Error("expected no links, got ", ls)
 	}
 
@@ -129,21 +129,8 @@ func TestExtractAnchors(t *testing.T) {
 			if err != nil {
 				t.Fatal("unexpected html parse error: ", err)
 			}
-			res := extractAll(r)
+			res := ExtractSync(r)
 			assert.ElementsMatch(f.expected, res)
 		})
 	}
-}
-
-func extractAll(root *html.Node) []Link {
-	ch := make(chan Link)
-	go func() {
-		defer close(ch)
-		extractAnchors(root, ch)
-	}()
-	var res []Link
-	for l := range ch {
-		res = append(res, l)
-	}
-	return res
 }
